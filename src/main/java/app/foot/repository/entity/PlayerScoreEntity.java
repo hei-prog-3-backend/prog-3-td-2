@@ -2,9 +2,15 @@ package app.foot.repository.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "player_score")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class PlayerScoreEntity {
     @Id

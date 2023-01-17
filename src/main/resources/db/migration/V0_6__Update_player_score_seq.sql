@@ -1,0 +1,1 @@
+alter sequence player_score_id_seq restart with 9;
