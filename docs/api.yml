@@ -20,6 +20,35 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Match'
+  /matches/{matchId}/goals:
+    post:
+      tags:
+        - Matches
+      summary: Add some goals to a match
+      parameters:
+        - name: matchId
+          in: path
+          schema:
+            type: integer
+          required: true
+      description: Be careful! A guardian player can not score a goal.
+      operationId: addGoals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Scorer'
+      responses:
+        '200':
+          description: The updated match with new scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
 components:
   schemas:
     Team:
@@ -62,8 +91,8 @@ components:
         scorers:
           type: array
           items:
-            $ref: '#/components/schemas/Scorers'
-    Scorers:
+            $ref: '#/components/schemas/Scorer'
+    Scorer:
       type: object
       properties:
         player:
