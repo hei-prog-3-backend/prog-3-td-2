@@ -19,4 +19,9 @@ public class MatchService {
                 .map(mapper::toDomain)
                 .toList();
     }
+    public List<Match> getMatch(Integer matchId) {
+        return repository.findById(matchId).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
 }

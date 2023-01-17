@@ -43,7 +43,6 @@ public class MatchMapper {
                 .map(playerMapper::toDomain)
                 .toList();
     }
-
     private static boolean isOpponentOwnGoal(TeamEntity team, PlayerScoreEntity scorer) {
         return !scorer.getPlayer().getTeam().equals(team) && scorer.isOwnGoal();
     }

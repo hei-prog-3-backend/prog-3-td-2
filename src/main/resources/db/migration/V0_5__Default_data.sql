@@ -29,3 +29,5 @@ values (1, 1, 1, 10, false),
 insert into player_score(id, id_match, id_player, "minute", own_goal)
 values (7, 2, 3, 70, false),
        (8, 2, 6, 80, true);
+
+alter sequence player_score_id_seq restart with 15;
