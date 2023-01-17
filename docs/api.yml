@@ -1,0 +1,74 @@
+openapi: 3.0.0
+servers:
+  - url: https://foot-api-server.com
+info:
+  version: latest
+  title: PROG3 - TD2
+paths:
+  /matches:
+    get:
+      tags:
+        - Matches
+      summary: Get all matches
+      operationId: getMatches
+      responses:
+        '200':
+          description: List of Matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+components:
+  schemas:
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Player:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        isGuardian:
+          type: boolean
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+        datetime:
+          type: string
+          format: datetime
+        stadium:
+          type: string
+        teamA:
+          allOf:
+            - $ref: '#/components/schemas/PlayedTeam'
+        teamB:
+          allOf:
+            - $ref: '#/components/schemas/PlayedTeam'
+    PlayedTeam:
+      allOf:
+        - $ref: '#/components/schemas/Team'
+      properties:
+        goals:
+          type: integer
+        scorers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scorers'
+    Scorers:
+      type: object
+      properties:
+        player:
+          $ref: '#/components/schemas/Player'
+        isOG:
+          type: boolean
+        scoreTime:
+          type: integer
