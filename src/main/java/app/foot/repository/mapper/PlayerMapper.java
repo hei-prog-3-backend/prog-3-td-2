@@ -24,4 +24,6 @@ public class PlayerMapper {
                 .isOwnGoal(entity.isOwnGoal())
                 .build();
     }
+
+
 }
