@@ -1,7 +1,5 @@
 package app.foot.service;
 
-import app.foot.model.Match;
-import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
 import app.foot.repository.PlayerRepository;
@@ -9,7 +7,6 @@ import app.foot.repository.PlayerScoreRepository;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
-import app.foot.repository.mapper.MatchMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -35,8 +31,8 @@ public class PlayerScoreService {
         }
 
         List<PlayerScoreEntity> playerScoreEntities = new ArrayList<>();
-
         MatchEntity match = matchRepository.findById(matchId).get();
+
         if(match == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Match " + match + " not found");
         }
