@@ -1,6 +1,7 @@
 package app.foot.repository.mapper;
 
 import app.foot.model.Team;
+import app.foot.model.TeamMatch;
 import app.foot.repository.entity.TeamEntity;
 import org.springframework.stereotype.Component;
 
