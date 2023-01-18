@@ -15,27 +15,27 @@ public class GoalMapper {
     private final MatchMapper matchMapper;
 
     public Goal toDomain(GoalEntity goalEntity) {
+        Integer matchId = getMatchId(goalEntity, goalEntity.getId());
+        Boolean player = isNotGuardian(goalEntity, goalEntity.getPlayerType());
         return Goal.builder()
                 .id(goalEntity.getId())
                 .match(Match.builder()
-                        .id(matchMapper.toDomain(goalEntity.getId()))
+                        .id(matchId)
+                        .build())
+                .player(player)
                 .build();
-
     }
 
-    private List<Goal> getMatchId(GoalEntity goalEntity, MatchEntity matchId) {
-        return goalEntity.getMatch().stream()
-                .filter(match -> match.getId() == matchId.getId())
-                .map(matchMapper::toDomain)
-                .toList();
+    private Integer getMatchId(GoalEntity goalEntity, Integer id) {
+        return goalEntity.getId();
     }
 
 
-    private static int theMatchId(MatchEntity match) {
+    private static int theMatchId(MatchEntity match, Integer id) {
         return match.getId();
     }
 
-    private static boolean isNotGardian(PlayerEntity player) {
+    private static boolean isNotGuardian(PlayerEntity player, Boolean type) {
         return !player.isGuardian();
     }
 }
