@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,9 +28,9 @@ public class MatchService {
     }
 
     public List<Match> getMatchesCreate(PlayerScorer playerScorer, Integer id){
-        PlayerScoreEntity.builder()
-                .id(id).player(Player.builder().id().name().isGuardian().build())
-        playerScoreService.createScore(playerScorer,id);
+        PlayerScoreEntity playerscorer = playerScoreService.findById(playerScorer.getPlayer().getId());
+
+            playerScoreService.createScore(playerscorer,id);
 
         return repository.findById(id).stream()
                 .map(mapper :: toDomain )

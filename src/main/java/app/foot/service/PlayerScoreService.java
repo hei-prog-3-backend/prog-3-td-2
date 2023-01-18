@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -16,5 +17,9 @@ public class PlayerScoreService {
 
     public PlayerScoreEntity createScore(PlayerScoreEntity playerScorer, Integer id) {
         return repository.save(playerScorer);
+    }
+
+    public PlayerScoreEntity findById(Integer id){
+        return repository.getById(id);
     }
 }

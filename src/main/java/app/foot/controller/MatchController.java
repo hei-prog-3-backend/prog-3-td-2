@@ -29,10 +29,10 @@ public class MatchController {
 
     @PostMapping("/matches/{matchesId}/goal")
     public List<Match> createMatchesIdGoal( @PathVariable Integer matchesId,
-                                            @RequestBody PlayerScoreEntity toCreate) {
+                                            @RequestBody PlayerScorer toCreate) {
 
-        minutesValidator.CreateScoreValidatorMinutes(toCreate);
-        validator.CreateScoreValidatorisGuardian(toCreate);
+        validator.accept(toCreate.getPlayer());
+        minutesValidator.accept(toCreate);
 
         return service.getMatchesCreate(toCreate , matchesId);
     }

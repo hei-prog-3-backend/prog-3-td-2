@@ -25,16 +25,13 @@ public class PlayerScoreMapper {
     public PlayerScoreEntity toDomain(PlayerScorer playerScorer){
 
         return PlayerScoreEntity.builder()
-                .player(Player.builder().id(playerScorer.getPlayer().getId())
+                .player(PlayerEntity.builder().id(playerScorer.getPlayer().getId())
                         .name(playerScorer.getPlayer().getName())
-                        .isGuardian(playerScorer.getPlayer().getIsGuardian())
-                        .build()
+                        .guardian(playerScorer.getPlayer().getIsGuardian())
+                        .build())
                 .ownGoal(playerScorer.getIsOwnGoal())
                 .minute(playerScorer.getMinute())
                 .build();
-
-
-
 
     }
 
