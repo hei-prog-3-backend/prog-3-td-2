@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class CreatePlayerScoreMinutesValidator implements Consumer<PlayerScorer>{
 
         @Override public void accept(PlayerScorer playerScorer){
-            if(!(playerScorer.getMinute() >= 0 && playerScorer.getMinute() <= 90)){
+            if((!(playerScorer.getMinute() >= 0 && playerScorer.getMinute() <= 90)) && playerScorer.getMinute() < 0 ){
                throw new NotFoundException("A goal is not in time");
             }
         }
