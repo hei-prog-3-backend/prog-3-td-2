@@ -6,3 +6,4 @@ create table if not exists player_score
     "minute"  integer,
     own_goal  boolean
 );
+alter sequence player_score_id_seq restart 7;
