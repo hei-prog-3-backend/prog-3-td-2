@@ -46,9 +46,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Match'
+                $ref: '#/components/schemas/Match'
 components:
   schemas:
     Team:
@@ -83,9 +81,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/PlayedTeam'
     PlayedTeam:
-      allOf:
-        - $ref: '#/components/schemas/Team'
+      type: object
       properties:
+        team:
+          $ref: '#/components/schemas/Team'
         goals:
           type: integer
         scorers:
