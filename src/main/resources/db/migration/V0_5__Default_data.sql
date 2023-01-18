@@ -29,3 +29,8 @@ values (1, 1, 1, 10, false),
 insert into player_score(id, id_match, id_player, "minute", own_goal)
 values (7, 2, 3, 70, false),
        (8, 2, 6, 80, true);
+
+insert into player (id, "name", id_team, guardian)
+values (7,'G1',1,true),
+       (8,'G2',2,true),
+       (9,'G3',3,true);
