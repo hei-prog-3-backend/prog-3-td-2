@@ -26,10 +26,14 @@ public class MatchMapperTest {
         PlayerScorer scorer = rakotoModelScorer(
                 playerModelRakoto(playerEntityRakoto(teamBarea())),
                 scorerRakoto(playerEntityRakoto(teamBarea())));
+
+
         when(teamMapper.toDomain(teamBarea())).thenReturn(teamModelBarea(teamBarea()));
         when(teamMapper.toDomain(teamGhana())).thenReturn(teamModelGhana(teamGhana()));
         when(playerMapper.toDomain(scorerRakoto(playerEntityRakoto(teamBarea()))))
                 .thenReturn(scorer);
+
+
         Match expected = Match.builder()
                 .teamA(TeamMatch.builder()
                         .team(teamModelBarea(teamBarea()))

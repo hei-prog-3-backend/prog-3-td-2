@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "player")
 @Data
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

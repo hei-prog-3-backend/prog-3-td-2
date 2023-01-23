@@ -7,6 +7,8 @@ public class GoalValidatorTest {
 
     @Test
     void accept_ok() {
+
+
     }
 
     //Mandatory attributes not provided : scoreTime
