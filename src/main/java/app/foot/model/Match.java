@@ -1,9 +1,6 @@
 package app.foot.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -11,6 +8,8 @@ import java.time.Instant;
 @AllArgsConstructor
 @Getter
 @Builder
+@EqualsAndHashCode
+@ToString
 public class Match {
     private Integer id;
     private TeamMatch teamA;
