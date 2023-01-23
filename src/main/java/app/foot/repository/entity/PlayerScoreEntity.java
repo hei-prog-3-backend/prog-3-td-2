@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "player_score")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PlayerScoreEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
