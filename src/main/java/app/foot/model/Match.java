@@ -6,7 +6,7 @@ import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Data
 @Builder
 @EqualsAndHashCode
 @ToString
