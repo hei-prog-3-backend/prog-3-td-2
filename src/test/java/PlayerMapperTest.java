@@ -10,15 +10,21 @@ import app.foot.repository.mapper.PlayerMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 //TODO-2: complete these tests
 public class PlayerMapperTest {
-PlayerRepository playerRepository = mock(PlayerRepository.class);
-MatchRepository matchRepository=mock(MatchRepository.class);
+static PlayerRepository playerRepository = mock(PlayerRepository.class);
+static MatchRepository matchRepository=mock(MatchRepository.class);
     PlayerMapper playerMapper = mock(PlayerMapper.class);
+
+    PlayerMapper subject = new PlayerMapper(matchRepository, playerRepository);
+
 
     static TeamEntity teamMada(){
         return TeamEntity.builder()
@@ -27,12 +33,34 @@ MatchRepository matchRepository=mock(MatchRepository.class);
                 .build();
     }
 
-    PlayerEntity rakotoPlayer1(){
+    static PlayerEntity rakotoPlayer1(){
         return PlayerEntity.builder()
                 .id(1)
                 .name("rakoto")
                 .team(teamMada())
                 .guardian(false)
+                .build();
+    }
+
+    static PlayerScoreEntity playerScoreEntityExcepted(){
+        return PlayerScoreEntity.builder()
+                .player(PlayerEntity.builder()
+                        .id(1)
+                        .build())
+                .match(MatchEntity.builder()
+                        .id(1)
+                        .build())
+                .minute(5)
+                .ownGoal(true)
+                .build();
+    }
+
+    static PlayerScorer playerScorer(){
+        return PlayerScorer.builder()
+                .player(PlayerRakotoModel(rakotoPlayer1()))
+                .isOwnGoal(playerScoreEntityExcepted().isOwnGoal())
+                .minute(playerScoreEntityExcepted().getMinute())
+                .isOwnGoal(playerScoreEntityExcepted().isOwnGoal())
                 .build();
     }
 
@@ -84,12 +112,12 @@ MatchRepository matchRepository=mock(MatchRepository.class);
                 .build();
     }
 
-    public static PlayerEntity PlayerEntityModel(Player player,int playerId){
-        return PlayerEntity.builder()
-                .id(playerId)
-                .name(player.getName())
-                .team(teamMada())
-                .guardian(player.getIsGuardian())
+    public static PlayerScoreEntity PlayerScorerEntityModel(PlayerScorer player,int playerId){
+        return PlayerScoreEntity.builder()
+                .match(matchRepository.getById(playerId))
+                .player(playerRepository.getById(player.getPlayer().getId()))
+                .minute(player.getMinute())
+                .ownGoal(player.getIsOwnGoal())
                 .build();
     }
 
@@ -100,6 +128,7 @@ MatchRepository matchRepository=mock(MatchRepository.class);
                 .isOwnGoal(playerScore.isOwnGoal())
                 .build();
     }
+
 
 
     @Test
@@ -136,9 +165,25 @@ MatchRepository matchRepository=mock(MatchRepository.class);
         assertEquals(excepted,actual);
 
     }
+    private void setUpPlayerRepository(PlayerRepository repository) {
+        when(repository.findById(any())).thenAnswer(i -> Optional.of(PlayerEntity.builder()
+                .id(i.getArgument(0))
+                .build()));
+    }
 
+    private void setUpMatchRepository(MatchRepository repository) {
+        when(repository.findById(any())).thenAnswer(i -> Optional.of(MatchEntity.builder()
+                .id(i.getArgument(0))
+                .build())
+        );
+    }
     @Test
     void player_scorer_to_entity_ok() {
-        when(playerMapper.toEntity(1,scorer())).thenReturn(PlayerEntityModel(scorer1(),1));
+        setUpPlayerRepository(playerRepository);
+        setUpMatchRepository(matchRepository);
+
+       PlayerScoreEntity actual = subject.toEntity(1,playerScorer());
+
+       assertEquals(playerScoreEntityExcepted(),actual);
     }
 }
