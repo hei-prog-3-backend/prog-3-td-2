@@ -15,7 +15,7 @@ public class GoalValidatorTest {
                 .build();
     }
 
-    Player player() {
+    Player initPlayer() {
         return Player.builder()
                 .id(1)
                 .isGuardian(false)
@@ -24,7 +24,7 @@ public class GoalValidatorTest {
 
     PlayerScorer validPlayerScorer() {
         return PlayerScorer.builder()
-                .player(player())
+                .player(initPlayer())
                 .scoreTime(1)
                 .isOG(true)
                 .build();
