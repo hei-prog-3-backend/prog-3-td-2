@@ -7,7 +7,7 @@ import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
 import app.foot.repository.mapper.PlayerMapper;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
