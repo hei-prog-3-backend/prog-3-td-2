@@ -1,6 +1,7 @@
 package app.foot.controller.validator;
 
 import app.foot.controller.rest.PlayerScorer;
+import app.foot.exception.BadRequestException;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
@@ -31,7 +32,7 @@ public class GoalValidator implements Consumer<PlayerScorer> {
             }
         }
         if (!exceptionBuilder.isEmpty()) {
-            throw new RuntimeException(exceptionBuilder.toString());
+            throw new BadRequestException(exceptionBuilder.toString());
         }
     }
 }
