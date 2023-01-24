@@ -6,6 +6,10 @@ import app.foot.model.Team;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
+import org.junit.jupiter.api.function.Executable;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestUtils {
 
@@ -92,4 +96,8 @@ public class TestUtils {
                 .build();
     }
 
+    public static void assertThrowsExceptionMessage(String message, Class exceptionClass, Executable executable) {
+        Throwable exception = assertThrows(exceptionClass, executable);
+        assertEquals(message, exception.getMessage());
+    }
 }

@@ -16,7 +16,8 @@ public class GoalValidatorTest {
     //Mandatory attributes not provided : scoreTime
     @Test
     void accept_ko() {
-        assertThrows(RuntimeException.class, () -> subject.accept(nullScoreTimeScorer()));
+        assertThrowsExceptionMessage("Score minute is mandatory.",
+                RuntimeException.class, () -> subject.accept(nullScoreTimeScorer()));
     }
 
     @Test
