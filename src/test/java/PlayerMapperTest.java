@@ -10,6 +10,9 @@ import app.foot.repository.mapper.PlayerMapper;
 
 import org.junit.jupiter.api.Test;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.File;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -160,6 +163,7 @@ static MatchRepository matchRepository=mock(MatchRepository.class);
                 .build())
         );
     }
+
     @Test
     void player_scorer_to_entity_ok() {
         setUpPlayerRepository(playerRepository);
