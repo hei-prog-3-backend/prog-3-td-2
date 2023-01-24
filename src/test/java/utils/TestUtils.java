@@ -70,6 +70,7 @@ public class TestUtils {
                 .id(playerEntityRakoto.getId())
                 .name(playerEntityRakoto.getName())
                 .isGuardian(false)
+                .teamName(teamBarea().getName())
                 .build();
     }
 
