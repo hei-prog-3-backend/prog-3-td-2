@@ -104,23 +104,6 @@ static MatchRepository matchRepository=mock(MatchRepository.class);
                 .build();
     }
 
-    PlayerScorer scorer(){
-        return PlayerScorer.builder()
-                .player(PlayerRakotoModel(rakotoPlayer1()))
-                .isOwnGoal(true)
-                .minute(12)
-                .build();
-    }
-
-    public static PlayerScoreEntity PlayerScorerEntityModel(PlayerScorer player,int playerId){
-        return PlayerScoreEntity.builder()
-                .match(matchRepository.getById(playerId))
-                .player(playerRepository.getById(player.getPlayer().getId()))
-                .minute(player.getMinute())
-                .ownGoal(player.getIsOwnGoal())
-                .build();
-    }
-
     public static PlayerScorer PlayerScorerModel(PlayerScoreEntity playerScore){
         return PlayerScorer.builder()
                 .player(PlayerRakotoModel(playerScore.getPlayer()))
