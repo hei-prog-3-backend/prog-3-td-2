@@ -1,35 +1,12 @@
-import app.foot.controller.rest.Player;
-import app.foot.controller.rest.PlayerScorer;
 import app.foot.controller.validator.GoalValidator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static utils.TestUtils.*;
 
 public class GoalValidatorTest {
     GoalValidator subject = new GoalValidator();
-
-    private static PlayerScorer scorer1() {
-        return PlayerScorer.builder()
-                .player(player1())
-                .isOG(false)
-                .scoreTime(10)
-                .build();
-    }
-
-    private static PlayerScorer nullScoreTimeScorer() {
-        return scorer1().toBuilder()
-                .scoreTime(null)
-                .build();
-    }
-
-    private static Player player1() {
-        return Player.builder()
-                .id(1)
-                .name("Rakoto")
-                .isGuardian(false)
-                .build();
-    }
 
     @Test
     void accept_ok() {
