@@ -23,14 +23,14 @@ public class MatchController {
     public Match getMatchById(@PathVariable Integer id) {
         return mapper.toRest(service.getMatchById(id));
     }
-
+    //TODO: add integration test ok and ko
     @GetMapping("/matches")
     public List<Match> getMatches() {
         return service.getMatches().stream()
                 .map(mapper::toRest)
                 .toList();
     }
-
+    //TODO: add integration test ok and ko of adding goals into match where id = 3
     @PostMapping("/matches/{matchId}/goals")
     public Match addGoals(@PathVariable int matchId, @RequestBody List<PlayerScorer> scorers) {
         scorers.forEach(validator);
