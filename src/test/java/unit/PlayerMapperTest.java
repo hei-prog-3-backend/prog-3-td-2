@@ -4,6 +4,7 @@ import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
 import app.foot.repository.PlayerRepository;
+import app.foot.repository.TeamRepository;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
@@ -23,7 +24,8 @@ public class PlayerMapperTest {
     public static final int MATCH_ID = 1;
     MatchRepository matchRepositoryMock = mock(MatchRepository.class);
     PlayerRepository playerRepositoryMock = mock(PlayerRepository.class);
-    PlayerMapper subject = new PlayerMapper(matchRepositoryMock, playerRepositoryMock);
+    TeamRepository teamRepositoryMock = mock(TeamRepository.class);
+    PlayerMapper subject = new PlayerMapper(matchRepositoryMock, playerRepositoryMock, teamRepositoryMock);
 
     private static PlayerEntity entityRakoto() {
         return playerEntityRakoto(teamBarea());

@@ -11,5 +11,6 @@ import lombok.*;
 public class Player {
     private Integer id;
     private String name;
+    private String teamName;
     private Boolean isGuardian;
 }

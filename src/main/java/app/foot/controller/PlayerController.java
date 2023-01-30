@@ -5,6 +5,8 @@ import app.foot.controller.rest.mapper.PlayerRestMapper;
 import app.foot.service.PlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,5 +25,13 @@ public class PlayerController {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    //TODO: add POST /players and add integration test ok and ko
+    @PostMapping("/players")
+    public List<Player> addPlayers(@RequestBody List<Player> toCreate) {
+        List<app.foot.model.Player> domain = toCreate.stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toUnmodifiableList());
+        return service.createPlayers(domain).stream()
+                .map(mapper::toRest)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }
