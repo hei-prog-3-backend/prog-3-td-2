@@ -22,6 +22,8 @@ public class MatchController {
   private final MatchRestMapper mapper;
   private final PlayerScorerRestMapper scorerMapper;
 
+  //TODO: add GET /matches/{id} and integration test ok and ko
+
   @GetMapping("/matches")
   public List<Match> getMatches() {
     return service.getMatches().stream()

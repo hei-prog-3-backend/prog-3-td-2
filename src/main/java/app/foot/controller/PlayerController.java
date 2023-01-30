@@ -22,4 +22,6 @@ public class PlayerController {
                 .map(mapper::toRest)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    //TODO: add POST /players and add integration test ok and ko
 }
