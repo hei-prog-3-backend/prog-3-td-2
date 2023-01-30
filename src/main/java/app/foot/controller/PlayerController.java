@@ -1,5 +1,6 @@
-package app.foot.controller.rest;
+package app.foot.controller;
 
+import app.foot.controller.rest.Player;
 import app.foot.controller.rest.mapper.PlayerRestMapper;
 import app.foot.service.PlayerService;
 import lombok.AllArgsConstructor;
