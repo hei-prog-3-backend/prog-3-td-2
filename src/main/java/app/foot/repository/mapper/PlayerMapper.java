@@ -45,7 +45,7 @@ public class PlayerMapper {
                 .build();
     }
 
-    //TODO: add unit test ok and ko for this
+
     public PlayerEntity toEntity(Player domain){
 
         TeamEntity team = teamRepository.findByName(domain.getTeamName());
