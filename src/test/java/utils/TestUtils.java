@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestUtils {
     static TeamRepository teamRepositoryMock = mock(TeamRepository.class);
@@ -111,16 +112,15 @@ public class TestUtils {
                 .id(player.getId())
                 .name(player.getName())
                 .guardian(player.getIsGuardian())
-                .team(teamRepositoryMock.findByName(player.getTeamName()))
+                .team(teamBarea())
                 .build();
-
     }
     public static app.foot.model.Player player(){
         return app.foot.model.Player.builder()
                 .id(1)
                 .name("J1")
                 .isGuardian(false)
-                .teamName("J1")
+                .teamName(teamBarea().getName())
                 .build();
     }
 

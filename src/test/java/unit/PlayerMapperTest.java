@@ -111,8 +111,9 @@ public class PlayerMapperTest {
 
 
     @Test
-    void player_to_domain_entity_ok() throws Exception {
+    void player_to_domain_entity_ok() {
         PlayerEntity excepted = rakotoEntity();
+        when(teamRepositoryMock.findByName(player().getTeamName())).thenReturn(teamBarea());
         PlayerEntity actual = subject.toEntity(player());
 
         assertEquals(excepted,actual);
@@ -120,7 +121,6 @@ public class PlayerMapperTest {
 
     @Test
     void player_to_domain_entity_ko (){
-        PlayerEntity excepted = rakotoWrongEntity();
         assertThrowsExceptionMessage("404 NOT_FOUND : Team name not found", NotFoundException.class,()->subject.toEntity(playerWithWrongTeam()));
     }
 }
