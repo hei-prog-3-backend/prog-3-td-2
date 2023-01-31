@@ -1,7 +1,9 @@
 package utils;
 
+import app.foot.controller.rest.Match;
 import app.foot.controller.rest.Player;
 import app.foot.controller.rest.PlayerScorer;
+import app.foot.controller.rest.TeamMatch;
 import app.foot.model.Team;
 import app.foot.repository.TeamRepository;
 import app.foot.repository.entity.PlayerEntity;
@@ -9,6 +11,9 @@ import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Instant;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -130,6 +135,74 @@ public class TestUtils {
                 .name("J2")
                 .isGuardian(false)
                 .teamName("W1")
+                .build();
+    }
+
+
+    public static Match expectedMatch3() {
+        return Match.builder()
+                .id(3)
+                .teamA(teamMatchA())
+                .teamB(teamMatchB())
+                .stadium("S3")
+                .datetime(Instant.parse("2023-01-01T14:00:00Z"))
+                .build();
+    }
+
+    public static TeamMatch teamMatchB() {
+        return TeamMatch.builder()
+                .team(team3())
+                .score(0)
+                .scorers(List.of())
+                .build();
+    }
+
+    public static TeamMatch teamMatchA() {
+        return TeamMatch.builder()
+                .team(team2())
+                .score(2)
+                .scorers(List.of(PlayerScorer.builder()
+                                .player(player3())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player6())
+                                .scoreTime(80)
+                                .isOG(true)
+                                .build()))
+                .build();
+    }
+
+    public static app.foot.controller.rest.Team team3() {
+        return app.foot.controller.rest.Team.builder()
+                .id(4)
+                .name("E4")
+                .build();
+    }
+
+    public static Player player6() {
+        return Player.builder()
+                .id(6)
+                .name("J6")
+                .teamName(team3().getName())
+                .isGuardian(false)
+                .build();
+    }
+
+    public static Player player3() {
+        return Player.builder()
+                .id(3)
+                .name("J3")
+                .teamName(team2().getName())
+                .isGuardian(false)
+                .build();
+    }
+
+    public static app.foot.controller.rest.Team team2() {
+        return app.foot.controller.rest.Team.builder()
+                .id(2)
+                .name("E2")
                 .build();
     }
 
