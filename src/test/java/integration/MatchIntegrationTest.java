@@ -3,6 +3,7 @@ package integration;
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.flogger.Flogger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,7 +35,6 @@ class MatchIntegrationTest {
                 .getResponse();
         Match actual = objectMapper.readValue(
                 response.getContentAsString(), Match.class);
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(expectedMatch2(), actual);
     }
@@ -85,6 +85,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(6)
                 .name("J6")
+                .teamName(team3().getName())
                 .isGuardian(false)
                 .build();
     }
@@ -93,6 +94,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(3)
                 .name("J3")
+                .teamName(team2().getName())
                 .isGuardian(false)
                 .build();
     }
