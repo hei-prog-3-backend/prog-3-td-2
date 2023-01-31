@@ -32,8 +32,7 @@ public class PlayerController {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    //TODO: add PUT /players where you can modify the name and the guardian status of a player
-    // Don't forget to add integration tests for this
+
 
 
      @PutMapping("/players")
