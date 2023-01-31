@@ -3,15 +3,20 @@ package utils;
 import app.foot.controller.rest.Player;
 import app.foot.controller.rest.PlayerScorer;
 import app.foot.model.Team;
+import app.foot.repository.TeamRepository;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
 import org.junit.jupiter.api.function.Executable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestUtils {
+    static TeamRepository teamRepositoryMock = mock(TeamRepository.class);
 
     public static PlayerScorer scorer1() {
         return PlayerScorer.builder()
@@ -101,4 +106,31 @@ public class TestUtils {
         Throwable exception = assertThrows(exceptionClass, executable);
         assertEquals(message, exception.getMessage());
     }
+
+    public static  PlayerEntity  playerEntityModel(app.foot.model.Player player){
+        return  PlayerEntity.builder()
+                .id(player.getId())
+                .name(player.getName())
+                .guardian(player.getIsGuardian())
+                .team(teamBarea())
+                .build();
+    }
+    public static app.foot.model.Player player(){
+        return app.foot.model.Player.builder()
+                .id(1)
+                .name("J1")
+                .isGuardian(false)
+                .teamName(teamBarea().getName())
+                .build();
+    }
+
+    public static app.foot.model.Player playerWithWrongTeam(){
+        return app.foot.model.Player.builder()
+                .id(2)
+                .name("J2")
+                .isGuardian(false)
+                .teamName("W1")
+                .build();
+    }
+
 }
