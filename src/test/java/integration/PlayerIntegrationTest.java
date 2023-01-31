@@ -104,6 +104,7 @@ class PlayerIntegrationTest {
         List<Player> actual = convertFromHttpResponse(response);
 
         assertEquals(1, actual.size());
+
         assertEquals(toUpdate, actual.get(0).toBuilder().id(null).build());
     }
 

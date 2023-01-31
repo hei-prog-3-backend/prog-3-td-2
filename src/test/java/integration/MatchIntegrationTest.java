@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,7 +23,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static utils.TestUtils.*;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
@@ -59,6 +62,24 @@ class MatchIntegrationTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(exceptedMatchNow(), actual);
     }
+
+    void read_match_ko (){
+        // GET /matches
+    }
+@Test
+    void create_goals() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/matches/3/goals")
+                        .content(objectMapper.writeValueAsString(List.of(scorer())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        System.out.println(response.getContentAsString());
+
+}
 
 
     private static List<Object> exceptedMatchNow(){
@@ -153,7 +174,7 @@ class MatchIntegrationTest {
                 .isGuardian(false)
                 .build();
     }
-    private static Player player3() {
+    public static Player player3() {
         return Player.builder()
                 .id(3)
                 .name("J3")
@@ -169,34 +190,6 @@ class MatchIntegrationTest {
                 .isGuardian(false)
                 .build();
     }
-
-
-
-    public static Player player7() {
-        return Player.builder()
-                .id(6)
-                .name("J6")
-                .teamName(team5().getName())
-                .isGuardian(false)
-                .build();
-    }
-
-    public static Player player5() {
-        return Player.builder()
-                .id(4)
-                .name("J4")
-                .teamName(team2().getName())
-                .isGuardian(false)
-                .build();
-    }
-
-    public static app.foot.controller.rest.Team team5() {
-        return app.foot.controller.rest.Team.builder()
-                .id(3)
-                .name("E3")
-                .build();
-    }
-
 
 
 
@@ -287,6 +280,5 @@ class MatchIntegrationTest {
                 response.getContentAsString(),
                 matchListType);
     }
-
 
 }

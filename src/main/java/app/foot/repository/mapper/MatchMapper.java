@@ -20,6 +20,7 @@ public class MatchMapper {
     public Match toDomain(MatchEntity matchEntity) {
         List<PlayerScorer> teamBScorers = getTeamScorers(matchEntity, matchEntity.getTeamB());
         List<PlayerScorer> teamAScorers = getTeamScorers(matchEntity, matchEntity.getTeamA());
+
         return Match.builder()
                 .id(matchEntity.getId())
                 .datetime(matchEntity.getDatetime())

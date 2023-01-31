@@ -31,6 +31,23 @@ public class TestUtils {
                 .build();
     }
 
+    public static PlayerScorer scorer(){
+        return PlayerScorer.builder()
+                .player(scorerPlayer())
+                .scoreTime(10)
+                .isOG(false)
+                .build();
+    }
+
+    public static Player scorerPlayer(){
+        return Player.builder()
+                .id(1)
+                .name("J1")
+                .isGuardian(false)
+                .teamName("barea")
+                .build();
+    }
+
     public static PlayerScorer nullScoreTimeScorer() {
         return scorer1().toBuilder()
                 .scoreTime(null)
