@@ -1,5 +1,6 @@
 package unit;
 
+import app.foot.exception.NotFoundException;
 import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static utils.TestUtils.*;
@@ -38,6 +40,12 @@ public class PlayerMapperTest {
                 scorerRakoto(playerEntityRakoto(teamBarea())));
     }
 
+    private static PlayerEntity rakotoEntity(){
+        return playerEntityModel(player());
+    }
+    private static PlayerEntity rakotoWrongEntity(){
+        return playerEntityModel(playerWithWrongTeam());
+    }
     @Test
     void player_to_domain_ok() {
         PlayerEntity entity = entityRakoto();
@@ -99,5 +107,20 @@ public class PlayerMapperTest {
                 .ownGoal(false)
                 .match(matchEntity1)
                 .build(), actual);
+    }
+
+
+    @Test
+    void player_to_domain_entity_ok() throws Exception {
+        PlayerEntity excepted = rakotoEntity();
+        PlayerEntity actual = subject.toEntity(player());
+
+        assertEquals(excepted,actual);
+    }
+
+    @Test
+    void player_to_domain_entity_ko (){
+        PlayerEntity excepted = rakotoWrongEntity();
+        assertThrowsExceptionMessage("404 NOT_FOUND : Team name not found", NotFoundException.class,()->subject.toEntity(playerWithWrongTeam()));
     }
 }
