@@ -21,11 +21,25 @@ public class PlayerService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public Player getPlayerById(int id){
+        return mapper.toDomain(repository.getById(id));
+    }
+
+    public List<Player> updatePlayers(List<Player> toUpdate){
+        return repository.saveAll(toUpdate.stream()
+                .map(mapper::toEntity)
+                .toList()).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
     public List<Player> createPlayers(List<Player> toCreate) {
         return repository.saveAll(toCreate.stream()
                         .map(mapper::toEntity)
-                        .collect(Collectors.toUnmodifiableList())).stream()
+                        .toList()).stream()
                 .map(mapper::toDomain)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
+
+
+
 }

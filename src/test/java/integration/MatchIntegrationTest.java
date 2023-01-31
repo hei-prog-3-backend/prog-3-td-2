@@ -10,12 +10,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.Instant;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = FootApi.class)
@@ -39,6 +43,12 @@ class MatchIntegrationTest {
         assertEquals(expectedMatch2(), actual);
     }
 
+    @Test
+    void read_match_by_id_ko() throws Exception {
+         mockMvc.perform(get("/matches/{id}", 8))
+                .andExpect(status().isNotFound());
+    }
+
     private static Match expectedMatch2() {
         return Match.builder()
                 .id(2)
@@ -49,7 +59,7 @@ class MatchIntegrationTest {
                 .build();
     }
 
-    private static TeamMatch teamMatchB() {
+    public static TeamMatch teamMatchB() {
         return TeamMatch.builder()
                 .team(team3())
                 .score(0)
@@ -57,7 +67,7 @@ class MatchIntegrationTest {
                 .build();
     }
 
-    private static TeamMatch teamMatchA() {
+    public static TeamMatch teamMatchA() {
         return TeamMatch.builder()
                 .team(team2())
                 .score(2)
@@ -74,7 +84,7 @@ class MatchIntegrationTest {
                 .build();
     }
 
-    private static Team team3() {
+    public static Team team3() {
         return Team.builder()
                 .id(3)
                 .name("E3")
@@ -85,6 +95,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(6)
                 .name("J6")
+                .teamName("E3")
                 .isGuardian(false)
                 .build();
     }
@@ -93,6 +104,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(3)
                 .name("J3")
+                .teamName("E2")
                 .isGuardian(false)
                 .build();
     }

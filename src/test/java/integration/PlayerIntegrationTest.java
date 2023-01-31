@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,8 +19,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
@@ -44,6 +45,7 @@ class PlayerIntegrationTest {
                 .build();
     }
 
+
     Player player3() {
         return Player.builder()
                 .id(3)
@@ -51,6 +53,8 @@ class PlayerIntegrationTest {
                 .isGuardian(false)
                 .build();
     }
+
+
 
     @Test
     void read_players_ok() throws Exception {
@@ -69,6 +73,48 @@ class PlayerIntegrationTest {
     }
 
     @Test
+    void update_players_ok() throws Exception {
+        Player toUpdate = Player.builder()
+                .id(2)
+                .name("Joe Doe")
+                .teamName("E1")
+                .isGuardian(false)
+                .build();
+        MockHttpServletResponse response = mockMvc
+                .perform(put("/players")
+                        .content(objectMapper.writeValueAsString(List.of(toUpdate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("application/json"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn()
+                .getResponse();
+
+        List<Player> actual = convertFromHttpResponse(response);
+
+        assertEquals(1, actual.size());
+        assertEquals(toUpdate, actual.get(0));
+    }
+
+    @Test
+    void update_players_ko() throws Exception {
+        Player toUpdate = Player.builder()
+                .id(2)
+                .name("Joe Doe")
+                .teamName("E2")
+                .isGuardian(false)
+                .build();
+        MockHttpServletResponse response = mockMvc
+                .perform(put("/players")
+                        .content(objectMapper.writeValueAsString(List.of(toUpdate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("application/json"))
+                .andExpect(status().is4xxClientError())
+                .andReturn()
+                .getResponse();
+
+    }
+
+    @Test
     void create_players_ok() throws Exception {
         Player toCreate = Player.builder()
                 .name("Joe Doe")
@@ -78,7 +124,7 @@ class PlayerIntegrationTest {
         MockHttpServletResponse response = mockMvc
                 .perform(post("/players")
                         .content(objectMapper.writeValueAsString(List.of(toCreate)))
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept("application/json"))
                 .andReturn()
                 .getResponse();

@@ -1,5 +1,6 @@
 package unit;
 
+import app.foot.controller.exception.NotFoundException;
 import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
@@ -9,6 +10,7 @@ import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.mapper.PlayerMapper;
+import app.foot.service.TeamService;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -24,7 +26,7 @@ public class PlayerMapperTest {
     public static final int MATCH_ID = 1;
     MatchRepository matchRepositoryMock = mock(MatchRepository.class);
     PlayerRepository playerRepositoryMock = mock(PlayerRepository.class);
-    TeamRepository teamRepositoryMock = mock(TeamRepository.class);
+    TeamService teamRepositoryMock = mock(TeamService.class);
     PlayerMapper subject = new PlayerMapper(matchRepositoryMock, playerRepositoryMock, teamRepositoryMock);
 
     private static PlayerEntity entityRakoto() {
@@ -100,4 +102,21 @@ public class PlayerMapperTest {
                 .match(matchEntity1)
                 .build(), actual);
     }
+
+    @Test
+    void player_model_to_player_entity_ok(){
+        when(teamRepositoryMock.getTeamByName(teamBarea().getName())).thenReturn(teamBarea());
+        PlayerEntity actual = subject.toEntity(playerModelRakoto(playerEntityRakoto(teamBarea())));
+
+        assertEquals(playerEntityRakoto(teamBarea()), actual);
+
+    }
+
+    @Test
+    void player_model_to_player_entity_ko(){
+        when(teamRepositoryMock.getTeamByName("null")).thenReturn(null);
+        assertThrowsExceptionMessage("Team not found", NotFoundException.class ,() -> subject.toEntity(playerModelRakoto(playerEntityRakoto(teamBarea()))));
+    }
+
+
 }
