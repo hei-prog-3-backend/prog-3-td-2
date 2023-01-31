@@ -1,8 +1,11 @@
 package integration;
 
+import aj.org.objectweb.asm.TypeReference;
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import lombok.extern.flogger.Flogger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,22 +46,23 @@ class MatchIntegrationTest {
 
 
 
+    @Test
     void read_match_ok() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(get("/matches"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
 
-        Match actual = objectMapper.readValue(
-                response.getContentAsString(), Match.class);
+        List<Match> actual = convertFromHttpResponse(response);
+
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(expectedMatch2(), actual);
+        assertEquals(exceptedMatchNow(), actual);
     }
 
 
-    private static List<Object> exceptedMatchN(){
-        return List.of(,expectedMatch2());
+    private static List<Object> exceptedMatchNow(){
+        return List.of(expectedMatch1(),expectedMatch2(),expectedMatch3());
     }
 
 
@@ -70,7 +75,6 @@ class MatchIntegrationTest {
                 .datetime(Instant.parse("2023-01-01T10:00:00Z"))
                 .build();
     }
-
     public static TeamMatch teamMatchA1() {
         return TeamMatch.builder()
                 .team(team1())
@@ -96,7 +100,6 @@ class MatchIntegrationTest {
                                         .isOG(true)
                                         .build()
                         )
-
                         )
                 .build();
     }
@@ -133,12 +136,6 @@ class MatchIntegrationTest {
                 .name("E2")
                 .build();
     }
-    public static app.foot.controller.rest.Team team3() {
-        return app.foot.controller.rest.Team.builder()
-                .id(4)
-                .name("E4")
-                .build();
-    }
 
     public static Player player1() {
         return Player.builder()
@@ -168,7 +165,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(4)
                 .name("J4")
-                .teamName(team1().getName())
+                .teamName("E2")
                 .isGuardian(false)
                 .build();
     }
@@ -199,9 +196,6 @@ class MatchIntegrationTest {
                 .name("E3")
                 .build();
     }
-
-
-
 
 
 
@@ -260,7 +254,39 @@ class MatchIntegrationTest {
                 .build();
     }
 
+    public static Match expectedMatch3() {
+        return Match.builder()
+                .id(3)
+                .teamA(teamMatchA3())
+                .teamB(teamMatchB3())
+                .stadium("S3")
+                .datetime(Instant.parse( "2023-01-01T18:00:00Z"))
+                .build();
+    }
 
+    private static TeamMatch teamMatchB3() {
+        return TeamMatch.builder()
+                .team(team3())
+                .score(0)
+                .scorers(List.of())
+                .build();
+    }
+
+    private static TeamMatch teamMatchA3() {
+        return TeamMatch.builder()
+                .team(team1())
+                .score(0)
+                .scorers(List.of())
+                .build();
+    }
+    private List<Match> convertFromHttpResponse(MockHttpServletResponse response)
+            throws JsonProcessingException, UnsupportedEncodingException {
+        CollectionType matchListType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, Match.class);
+        return objectMapper.readValue(
+                response.getContentAsString(),
+                matchListType);
+    }
 
 
 }
