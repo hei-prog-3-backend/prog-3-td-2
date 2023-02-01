@@ -111,7 +111,6 @@ class PlayerIntegrationTest {
                 .andExpect(status().is4xxClientError())
                 .andReturn()
                 .getResponse();
-
     }
 
     @Test
