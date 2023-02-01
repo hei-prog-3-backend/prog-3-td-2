@@ -2,20 +2,28 @@ package integration;
 
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
+import app.foot.exception.BadRequestException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = FootApi.class)
@@ -37,6 +45,72 @@ class MatchIntegrationTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(expectedMatch2(), actual);
+    }
+    @Test
+    void read_match_ko() throws Exception{
+        MockHttpServletResponse response = mockMvc.perform(get("/matches"))
+                .andExpect(status().is5xxServerError())
+                .andReturn()
+                .getResponse();
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+    }
+
+    @Test
+    void read_match_ok() throws Exception{
+        MockHttpServletResponse response = mockMvc.perform(get("/matches"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        List <Match> actual = convertFromHttpResponse(response);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(3, actual.size());
+    }
+
+    @Test
+    void create_match_goals_ok() throws Exception {
+        PlayerScorer toCreate = PlayerScorer.builder()
+                .player(player1())
+                .scoreTime(70)
+                .isOG(false)
+                .build();
+
+        MockHttpServletResponse response = mockMvc
+                .perform(post("/matches/3/goals")
+                        .content(objectMapper.writeValueAsString(List.of(toCreate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @Test
+    void create_match_goals_ko() throws Exception {
+        PlayerScorer toCreate = PlayerScorer.builder()
+                .player(player1())
+                .scoreTime(70)
+                .isOG(true)
+                .build();
+        MockHttpServletResponse response = mockMvc
+                .perform(post("/matches/3/goals")
+                        .content(objectMapper.writeValueAsString(List.of(toCreate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
+                .andExpect(result -> assertEquals("bad arguments", result.getResolvedException().getMessage()))
+                .andReturn()
+                .getResponse();
+    }
+
+    private List<Match> convertFromHttpResponse(MockHttpServletResponse response)
+            throws JsonProcessingException, UnsupportedEncodingException {
+        CollectionType matchListType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, Match.class);
+        return objectMapper.readValue(
+                response.getContentAsString(),
+                matchListType);
     }
 
     private static Match expectedMatch2() {
@@ -78,6 +152,14 @@ class MatchIntegrationTest {
         return Team.builder()
                 .id(3)
                 .name("E3")
+                .build();
+    }
+    Player player1() {
+        return Player.builder()
+                .id(1)
+                .name("J1")
+                .teamName("E1")
+                .isGuardian(false)
                 .build();
     }
 
