@@ -10,7 +10,7 @@ import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
 import org.junit.jupiter.api.function.Executable;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestUtils {
     static TeamRepository teamRepositoryMock = mock(TeamRepository.class);
@@ -61,7 +60,22 @@ public class TestUtils {
                 .isGuardian(false)
                 .build();
     }
+    public static Player playertoScore1() {
+        return Player.builder()
+                .id(1)
+                .name("J1")
+                .teamName("E1")
+                .isGuardian(false)
+                .build();
+    }
 
+    public static  PlayerScorer playerScorer(){
+        return  PlayerScorer.builder()
+                .player(playertoScore1())
+                .scoreTime(10)
+                .isOG(false)
+                .build();
+    }
     public static app.foot.model.PlayerScorer rakotoModelScorer(app.foot.model.Player playerModelRakoto, PlayerScoreEntity scorerRakoto) {
         return app.foot.model.PlayerScorer.builder()
                 .player(playerModelRakoto)
@@ -222,5 +236,12 @@ public class TestUtils {
                 .name("E2")
                 .build();
     }
+    public static String formatThrowMessage(String message, HttpStatus status) {
+        if (status != null) {
+            return status.toString() + " : " + message;
+        } return message;
+    }
 
 }
+
+

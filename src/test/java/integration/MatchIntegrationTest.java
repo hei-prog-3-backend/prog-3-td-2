@@ -1,12 +1,12 @@
 package integration;
 
-import aj.org.objectweb.asm.TypeReference;
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
+import app.foot.exception.BadRequestException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import lombok.extern.flogger.Flogger;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,13 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,16 +60,17 @@ class MatchIntegrationTest {
 
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(exceptedMatchNow(), actual);
+        assertTrue(actual.contains(expectedMatch2()));
     }
 
     void read_match_ko (){
         // GET /matches
     }
 @Test
-    void create_goals() throws Exception {
+    void create_goals_ok() throws Exception {
+
         MockHttpServletResponse response = mockMvc.perform(post("/matches/3/goals")
-                        .content(objectMapper.writeValueAsString(List.of(scorer())))
+                        .content(objectMapper.writeValueAsString(List.of(playerScorer())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
@@ -77,9 +78,35 @@ class MatchIntegrationTest {
                 .andReturn()
                 .getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        System.out.println(response.getContentAsString());
+        Match actual = objectMapper.readValue(response.getContentAsString(),Match.class);
+        assertTrue(actual.getTeamA().getScorers().contains(playerScorer()));
 
 }
+
+
+
+
+    @Test
+    void add_goals_to_match_ko() throws Exception {
+        PlayerScorer nullTimeScorer = scorer1().toBuilder()
+                .scoreTime(null)
+                .build();
+
+        RequestBuilder request = post("/matches/3/goals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(List.of(nullTimeScorer)));
+
+        ServletException exception = assertThrows(ServletException.class, () -> mockMvc.perform(request));
+
+        String exceptionMessage = formatThrowMessage(
+                "Score minute is mandatory.",
+                HttpStatus.BAD_REQUEST
+        );
+
+        assertThrowsExceptionMessage(exceptionMessage, BadRequestException.class, () -> {
+            throw exception.getRootCause();
+        });
+    }
 
 
     private static List<Object> exceptedMatchNow(){
