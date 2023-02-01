@@ -20,18 +20,31 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Match'
+  /matches/{id}:
+    get:
+      tags:
+        - Matches
+      summary: Get match by id
+      operationId: getMatchById
+      responses:
+        '200':
+          description: the identified match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
   /matches/{matchId}/goals:
     post:
       tags:
         - Matches
-      summary: Add some goals to a match
+      summary: score goals on a match
       parameters:
         - name: matchId
           in: path
           schema:
             type: integer
           required: true
-      description: Be careful! A guardian player can not score a goal.
+      description: note that a player with `isGuardian=true` won't be able to score
       operationId: addGoals
       requestBody:
         content:
@@ -47,6 +60,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
+  /players:
+    post:
+      tags:
+        - players
+      summary: add players
+      description: add new players
+      operationId: addPlayers
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePlayer'
+      responses:
+        '200':
+          description: list of the added players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+    put:
+      tags:
+        - players
+      summary: Edit players
+      description: |
+        edit players, the id must be provided
+      operationId: editPlayers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Player'
+      responses:
+        '200':
+          description: The updated players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
 components:
   schemas:
     Team:
@@ -60,6 +125,10 @@ components:
       properties:
         id:
           type: integer
+        allOf:
+          $ref: "#/components/schemas/CreatePlayer"
+    CreatePlayer:
+      properties:
         name:
           type: string
         isGuardian:
