@@ -44,9 +44,9 @@ public class PlayerController {
     @PutMapping("/players/{id}")
     public PlayerEntity updatePlayers(@PathVariable Integer id,
                                       @RequestParam String playerName,
-                                      @RequestParam Boolean isGuardian) {
+                                      @RequestParam Boolean guardian) {
         service.updateNamePlayer(id, playerName);
-        service.updateGuardianPlayer(id, isGuardian);
+        service.updateGuardianPlayer(id, guardian);
         return service.getById(id);
     }
 

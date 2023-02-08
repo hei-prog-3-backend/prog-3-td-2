@@ -156,7 +156,7 @@ class MatchIntegrationTest {
                 .id(1)
                 .name("J1")
                 .teamName("E1")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 
@@ -164,7 +164,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(6)
                 .name("J6")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 
@@ -172,7 +172,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(3)
                 .name("J3")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 

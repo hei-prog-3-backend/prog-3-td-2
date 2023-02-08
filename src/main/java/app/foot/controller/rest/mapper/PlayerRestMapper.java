@@ -11,7 +11,7 @@ public class PlayerRestMapper {
         return Player.builder()
                 .id(domain.getId())
                 .name(domain.getName())
-                .isGuardian(domain.getIsGuardian())
+                .guardian(domain.getIsGuardian())
                 .teamName(domain.getTeamName())
                 .build();
     }
@@ -19,7 +19,7 @@ public class PlayerRestMapper {
     public app.foot.model.Player toDomain(Player rest) {
         return app.foot.model.Player.builder()
                 .id(rest.getId())
-                .isGuardian(rest.getIsGuardian())
+                .isGuardian(rest.getGuardian())
                 .name(rest.getName())
                 .teamName(rest.getTeamName())
                 .build();

@@ -34,7 +34,7 @@ class PlayerIntegrationTest {
                 .id(1)
                 .name("J1")
                 .teamName("E1")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 
@@ -43,7 +43,7 @@ class PlayerIntegrationTest {
                 .id(2)
                 .name("J2")
                 .teamName("E1")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 
@@ -52,7 +52,7 @@ class PlayerIntegrationTest {
                 .id(3)
                 .name("J3")
                 .teamName("E2")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 
@@ -77,10 +77,9 @@ class PlayerIntegrationTest {
         String newName = "Joe";
         Boolean guardian = true;
         Player toUpdate = Player.builder()
-                .id(10)
+                .id(1)
                 .name("Joe")
-                .isGuardian(true)
-                .teamName("E1")
+                .guardian(true)
                 .build();
         MockHttpServletResponse response = mockMvc
                 .perform(put("/players/1")
@@ -99,7 +98,7 @@ class PlayerIntegrationTest {
     void create_players_ok() throws Exception {
         Player toCreate = Player.builder()
                 .name("Joe Doe")
-                .isGuardian(false)
+                .guardian(false)
                 .teamName("E1")
                 .build();
         MockHttpServletResponse response = mockMvc

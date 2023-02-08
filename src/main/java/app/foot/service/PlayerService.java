@@ -39,9 +39,9 @@ public class PlayerService {
       return repository.save(player);
     }
 
-    public PlayerEntity updateGuardianPlayer(Integer id, Boolean isGuardian ){
+    public PlayerEntity updateGuardianPlayer(Integer id, Boolean guardian ){
         PlayerEntity player= repository.findById(id).get();
-        player.setGuardian(isGuardian);
+        player.setGuardian(guardian);
         return repository.save(player);
     }
 

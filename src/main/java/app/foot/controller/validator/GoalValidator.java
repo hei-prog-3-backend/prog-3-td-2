@@ -12,7 +12,7 @@ public class GoalValidator implements Consumer<PlayerScorer> {
     @Override
     public void accept(PlayerScorer playerScorer) {
         StringBuilder exceptionBuilder = new StringBuilder();
-        if (playerScorer.getPlayer().getIsGuardian()) {
+        if (playerScorer.getPlayer().getGuardian()) {
             exceptionBuilder.append("Player#")
                     .append(playerScorer.getPlayer().getId())
                     .append(" is a guardian ").append("so they cannot score.");

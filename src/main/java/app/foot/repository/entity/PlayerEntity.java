@@ -1,5 +1,6 @@
 package app.foot.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,6 @@ public class PlayerEntity {
     private boolean guardian;
     @ManyToOne
     @JoinColumn(name = "id_team")
+    @JsonIgnore
     private TeamEntity team;
 }

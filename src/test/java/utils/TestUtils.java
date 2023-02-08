@@ -31,7 +31,7 @@ public class TestUtils {
         return Player.builder()
                 .id(1)
                 .name("Rakoto")
-                .isGuardian(false)
+                .guardian(false)
                 .build();
     }
 

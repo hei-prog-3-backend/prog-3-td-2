@@ -28,7 +28,7 @@ public class GoalValidatorTest {
         assertThrows(RuntimeException.class, () -> subject.accept(
                 scorer1().toBuilder()
                         .player(player1().toBuilder()
-                                .isGuardian(true)
+                                .guardian(true)
                                 .build())
                         .build()));
     }
