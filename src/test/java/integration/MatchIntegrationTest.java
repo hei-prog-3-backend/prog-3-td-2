@@ -55,12 +55,13 @@ class MatchIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
-
         List<Match> actual = convertFromHttpResponse(response);
 
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(actual.contains(expectedMatch3()));
         assertTrue(actual.contains(expectedMatch2()));
+        assertTrue(actual.contains(expectedMatch1()));
+
     }
 
     void read_match_ko (){
@@ -109,9 +110,7 @@ class MatchIntegrationTest {
     }
 
 
-    private static List<Object> exceptedMatchNow(){
-        return List.of(expectedMatch1(),expectedMatch2(),expectedMatch3());
-    }
+
 
 
     public static Match expectedMatch1() {
@@ -128,7 +127,7 @@ class MatchIntegrationTest {
                 .team(team1())
                 .score(4)
                 .scorers(List.of(PlayerScorer.builder()
-                                .player(player1())
+                                  .player(player1())
                                 .scoreTime(30)
                                 .isOG(false)
                                 .build(),
@@ -295,8 +294,17 @@ class MatchIntegrationTest {
     private static TeamMatch teamMatchA3() {
         return TeamMatch.builder()
                 .team(team1())
-                .score(0)
-                .scorers(List.of())
+                .score(9)
+                .scorers(List.of(
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer(),
+                        playerScorer()))
                 .build();
     }
     private List<Match> convertFromHttpResponse(MockHttpServletResponse response)

@@ -60,7 +60,7 @@ class PlayerIntegrationTest {
         List<Player> actual = convertFromHttpResponse(response);
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(11, actual.size());
+        assertEquals(25, actual.size());
     }
 
     @Test
