@@ -8,6 +8,7 @@ import app.foot.repository.TeamRepository;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
+import app.foot.repository.entity.TeamEntity;
 import app.foot.repository.mapper.PlayerMapper;
 import org.junit.jupiter.api.Test;
 
@@ -100,4 +101,24 @@ public class PlayerMapperTest {
                 .match(matchEntity1)
                 .build(), actual);
     }
+    @Test
+    void player_entity_ok(){
+        when(teamRepositoryMock.findByName("Barea"))
+                .thenReturn(teamBarea());
+        PlayerEntity actual = subject.toEntity(Player.builder()
+                .id(1)
+                .name("Rakoto")
+                .teamName("Barea")
+                .isGuardian(false)
+                .build());
+
+        assertEquals(PlayerEntity.builder()
+                .id(1)
+                .name("Rakoto")
+                .team(teamBarea())
+                .guardian(false)
+                .build(), actual);
+    }
+
+
 }

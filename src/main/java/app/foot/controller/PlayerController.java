@@ -3,6 +3,7 @@ package app.foot.controller;
 import app.foot.controller.rest.Player;
 import app.foot.controller.rest.mapper.PlayerRestMapper;
 import app.foot.repository.PlayerRepository;
+import app.foot.repository.entity.PlayerEntity;
 import app.foot.service.PlayerService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
@@ -41,14 +42,14 @@ public class PlayerController {
     //TODO: add PUT /players where you can modify the name and the guardian status of a player
 
     @PutMapping("/players/{id}")
-    public List<Player> updatePlayers(@RequestBody List<Player> toUpdate, @PathVariable Integer id) {
-        List<app.foot.model.Player> domain = toUpdate.stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toUnmodifiableList());
-        return service.updatePlayers(domain).stream()
-                .map(mapper::toRest)
-                .collect(Collectors.toUnmodifiableList());
+    public PlayerEntity updatePlayers(@PathVariable Integer id,
+                                      @RequestParam String playerName,
+                                      @RequestParam Boolean isGuardian) {
+        service.updateNamePlayer(id, playerName);
+        service.updateGuardianPlayer(id, isGuardian);
+        return service.getById(id);
     }
+
 
 
     // Don't forget to add integration tests for this

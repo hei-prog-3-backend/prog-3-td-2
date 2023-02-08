@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,11 +30,19 @@ public class PlayerService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Player> updatePlayers(List<Player> toUpdate) {
-        return repository.saveAll(toUpdate.stream()
-                        .map(mapper::toEntity)
-                        .collect(Collectors.toUnmodifiableList())).stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toUnmodifiableList());
+    public PlayerEntity getById(Integer id){
+        return repository.getById(id);
     }
+    public PlayerEntity updateNamePlayer(Integer id, String playerName ){
+       PlayerEntity player= repository.findById(id).get();
+       player.setName(playerName);
+      return repository.save(player);
+    }
+
+    public PlayerEntity updateGuardianPlayer(Integer id, Boolean isGuardian ){
+        PlayerEntity player= repository.findById(id).get();
+        player.setGuardian(isGuardian);
+        return repository.save(player);
+    }
+
 }

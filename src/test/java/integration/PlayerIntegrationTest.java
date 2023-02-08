@@ -1,8 +1,10 @@
 package integration;
 
 import app.foot.FootApi;
+import app.foot.controller.rest.Match;
 import app.foot.controller.rest.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
@@ -72,6 +73,29 @@ class PlayerIntegrationTest {
     }
 
     @Test
+    void update_player_ok() throws Exception {
+        String newName = "Joe";
+        Boolean guardian = true;
+        Player toUpdate = Player.builder()
+                .id(10)
+                .name("Joe")
+                .isGuardian(true)
+                .teamName("E1")
+                .build();
+        MockHttpServletResponse response = mockMvc
+                .perform(put("/players/1")
+                        .param("playerName",newName)
+                        .param("guardian", String.valueOf(guardian))
+                        .content(objectMapper.writeValueAsString((toUpdate)))
+                        .contentType("application/json")
+                        .accept("application/json"))
+                .andReturn()
+                .getResponse();
+        Player actual = convertFromHttpResponsePlayer(response);
+        assertEquals(toUpdate, actual);
+    }
+
+    @Test
     void create_players_ok() throws Exception {
         Player toCreate = Player.builder()
                 .name("Joe Doe")
@@ -95,6 +119,15 @@ class PlayerIntegrationTest {
             throws JsonProcessingException, UnsupportedEncodingException {
         CollectionType playerListType = objectMapper.getTypeFactory()
                 .constructCollectionType(List.class, Player.class);
+        return objectMapper.readValue(
+                response.getContentAsString(),
+                playerListType);
+    }
+
+    private Player convertFromHttpResponsePlayer(MockHttpServletResponse response)
+            throws JsonProcessingException, UnsupportedEncodingException {
+        JavaType playerListType = objectMapper.getTypeFactory()
+                .constructType(Player.class);
         return objectMapper.readValue(
                 response.getContentAsString(),
                 playerListType);

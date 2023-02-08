@@ -4,8 +4,6 @@ import app.foot.FootApi;
 import app.foot.controller.rest.*;
 import app.foot.exception.BadRequestException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.junit.jupiter.api.Test;
@@ -54,7 +52,6 @@ class MatchIntegrationTest {
                 .getResponse();
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
-
     @Test
     void read_match_ok() throws Exception{
         MockHttpServletResponse response = mockMvc.perform(get("/matches"))
