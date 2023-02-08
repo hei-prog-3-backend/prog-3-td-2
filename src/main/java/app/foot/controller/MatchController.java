@@ -23,7 +23,6 @@ public class MatchController {
     public Match getMatchById(@PathVariable Integer id) {
         return mapper.toRest(service.getMatchById(id));
     }
-    //TODO: add integration test ok and ko
     @GetMapping("/matches")
     public List<Match> getMatches() {
         return service.getMatches().stream()
