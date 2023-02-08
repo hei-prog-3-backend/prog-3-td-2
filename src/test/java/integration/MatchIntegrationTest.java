@@ -32,6 +32,13 @@ class MatchIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .findAndRegisterModules();  //Allow 'java.time.Instant' mapping
 
+    void add_goal_ok() throws Exception {
+
+    }
+    void add_goal_ko() throws Exception {
+
+    }
+
     @Test
     void read_match_by_id_ok() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(get("/matches/2"))

@@ -4,10 +4,9 @@ import app.foot.controller.rest.Player;
 import app.foot.controller.rest.mapper.PlayerRestMapper;
 import app.foot.service.PlayerService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +34,18 @@ public class PlayerController {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    //TODO: add PUT /players where you can modify the name and the guardian status of a player
     // Don't forget to add integration tests for this
+
+    @PutMapping("/players/{id}")
+    public ResponseEntity<app.foot.model.Player> updatePlayer(
+            @PathVariable Integer id,
+            @RequestBody Player player) {
+        app.foot.model.Player updatedPlayer = service.updatePlayer(id, mapper.toDomain(player));
+
+        if (updatedPlayer == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedPlayer,HttpStatus.OK);
+    }
 }
+
