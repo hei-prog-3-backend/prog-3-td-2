@@ -31,7 +31,6 @@ public class MatchController extends BaseController {
                 .toList();
     }
 
-    //TODO: add integration test ok and ko of adding goals into match where id = 3
     @PostMapping("/matches/{matchId}/goals")
     public Match addGoals(@PathVariable int matchId, @RequestBody List<PlayerScorer> scorers) {
         scorers.forEach(validator);

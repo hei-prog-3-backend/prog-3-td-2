@@ -2,10 +2,14 @@ package integration;
 
 import app.foot.FootApi;
 import app.foot.controller.rest.Player;
+import app.foot.controller.rest.PlayerScorer;
+import app.foot.repository.TeamRepository;
+import app.foot.repository.mapper.PlayerMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class PlayerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     Player player1() {
@@ -49,6 +54,26 @@ class PlayerIntegrationTest {
                 .id(3)
                 .name("J3")
                 .isGuardian(false)
+                .build();
+    }
+
+    PlayerScorer playerS1() {
+        return PlayerScorer.builder()
+                .player(player1())
+                .isOG(false)
+                .scoreTime(10)
+                .build();
+    } PlayerScorer playerS2() {
+        return PlayerScorer.builder()
+                .player(player1())
+                .isOG(false)
+                .scoreTime(20)
+                .build();
+    } PlayerScorer playerS3() {
+        return PlayerScorer.builder()
+                .player(player1())
+                .isOG(false)
+                .scoreTime(30)
                 .build();
     }
 
@@ -87,6 +112,11 @@ class PlayerIntegrationTest {
         assertEquals(1, actual.size());
         assertEquals(toCreate, actual.get(0).toBuilder().id(null).build());
     }
+//    @Test
+//    public void testToEntity(){
+//        when(teamRepository.findByName(eq("Barea"))).thenReturn(teamBarea());
+//        PlayerEntity actual = subject.toEntity()
+//    }
 
     private List<Player> convertFromHttpResponse(MockHttpServletResponse response)
             throws JsonProcessingException, UnsupportedEncodingException {
@@ -96,4 +126,5 @@ class PlayerIntegrationTest {
                 response.getContentAsString(),
                 playerListType);
     }
+
 }
