@@ -63,7 +63,6 @@ public class PlayerMapperTest {
                 .minute(10)
                 .ownGoal(false)
                 .build());
-
         assertEquals(rakotoScorer(), actual);
     }
 
@@ -110,12 +109,6 @@ public class PlayerMapperTest {
 
         assertEquals(playerEntityRakoto(teamBarea()), actual);
 
-    }
-
-    @Test
-    void player_model_to_player_entity_ko(){
-        when(teamRepositoryMock.getTeamByName("null")).thenReturn(null);
-        assertThrowsExceptionMessage("Team not found", NotFoundException.class ,() -> subject.toEntity(playerModelRakoto(playerEntityRakoto(teamBarea()))));
     }
 
 

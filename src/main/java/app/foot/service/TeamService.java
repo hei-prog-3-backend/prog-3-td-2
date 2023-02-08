@@ -15,18 +15,12 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
 
-    public List<TeamEntity> getTeams(){
-        return teamRepository.findAll();
-    }
-
     public TeamEntity getTeamByName(String name){
         TeamEntity team = teamRepository.findByName(name);
-        if(team != null){
-            return team;
-        } else {
+        if(team == null){
             throw new NotFoundException("Team not found");
         }
-
+        return team;
     }
 
 }

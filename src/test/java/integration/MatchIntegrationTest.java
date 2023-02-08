@@ -3,6 +3,7 @@ package integration;
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
+@Transactional
 class MatchIntegrationTest {
     @Autowired
     private MockMvc mockMvc;

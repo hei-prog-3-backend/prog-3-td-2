@@ -45,9 +45,6 @@ public class PlayerMapper {
 
     //TODO: add unit test ok and ko for this
     public PlayerEntity toEntity(Player domain) {
-
-
-
         return PlayerEntity.builder()
                 .id(domain.getId())
                 .name(domain.getName())
