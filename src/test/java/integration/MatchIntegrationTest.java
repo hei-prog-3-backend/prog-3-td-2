@@ -6,6 +6,7 @@ import app.foot.exception.BadRequestException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,13 +20,15 @@ import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
+@Slf4j
 class MatchIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -51,17 +54,6 @@ class MatchIntegrationTest {
                 .andReturn()
                 .getResponse();
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
-    }
-    @Test
-    void read_match_ok() throws Exception{
-        MockHttpServletResponse response = mockMvc.perform(get("/matches"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-        List <Match> actual = convertFromHttpResponse(response);
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(3, actual.size());
     }
 
     @Test
@@ -101,13 +93,86 @@ class MatchIntegrationTest {
                 .getResponse();
     }
 
-    private List<Match> convertFromHttpResponse(MockHttpServletResponse response)
-            throws JsonProcessingException, UnsupportedEncodingException {
-        CollectionType matchListType = objectMapper.getTypeFactory()
-                .constructCollectionType(List.class, Match.class);
-        return objectMapper.readValue(
-                response.getContentAsString(),
-                matchListType);
+    @Test
+    void read_matches_ok() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(get("/matches"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        List<Match> actual = convertFromHttpResponse(response);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(3, actual.size());
+        assertTrue(actual.contains(expectedMatch2()));
+        //TODO: add these checks and its values
+        assertTrue(actual.contains(expectedMatch1()));
+        assertTrue(actual.contains(expectedMatch2()));
+        assertTrue(actual.contains(expectedMatch3()));
+    }
+
+    private static Match expectedMatch1() {
+        return Match.builder()
+                .id(1)
+                .teamA(teamMatchA1())
+                .teamB(teamMatchB1())
+                .stadium("S1")
+                .datetime(Instant.parse("2023-01-01T10:00:00Z"))
+                .build();
+    }
+
+    private static TeamMatch teamMatchA1() {
+        return TeamMatch.builder()
+                .team(team1())
+                .score(4)
+                .scorers(List.of(PlayerScorer.builder()
+                                .player(player4())
+                                .scoreTime(60)
+                                .isOG(true)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(30)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(20)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(10)
+                                .isOG(false)
+                                .build()
+                ))
+                .build();
+    }
+
+    private static TeamMatch teamMatchB1() {
+        return TeamMatch.builder()
+                .team(team2())
+                .score(2)
+                .scorers(List.of(PlayerScorer.builder()
+                                .player(player2())
+                                .scoreTime(40)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player3())
+                                .scoreTime(50)
+                                .isOG(false)
+                                .build()))
+                .build();
+    }
+
+    private static Match expectedMatch3() {
+        return Match.builder()
+                .id(1)
+                .teamA(teamMatchA3())
+                .teamB(teamMatchB3())
+                .stadium("S3")
+                .datetime(Instant.parse("2023-01-01T10:00:00Z"))
+                .build();
     }
 
     private static Match expectedMatch2() {
@@ -119,6 +184,92 @@ class MatchIntegrationTest {
                 .datetime(Instant.parse("2023-01-01T14:00:00Z"))
                 .build();
     }
+    private static TeamMatch teamMatchB3() {
+        return TeamMatch.builder()
+                .team(team3())
+                .score(2)
+                .scorers(List.of(
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(true)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(true)
+                                .build()
+                ))
+                .build();
+    }
+    private static TeamMatch teamMatchA3() {
+        return TeamMatch.builder()
+                .team(team1())
+                .score(12)
+                .scorers(List.of(
+                        PlayerScorer.builder()
+                                .player(player6())
+                                .scoreTime(70)
+                                .isOG(true)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build(),
+                        PlayerScorer.builder()
+                                .player(player1())
+                                .scoreTime(70)
+                                .isOG(false)
+                                .build()
+                ))
+                .build();
+    }
 
     private static TeamMatch teamMatchB() {
         return TeamMatch.builder()
@@ -127,6 +278,7 @@ class MatchIntegrationTest {
                 .scorers(List.of())
                 .build();
     }
+
 
     private static TeamMatch teamMatchA() {
         return TeamMatch.builder()
@@ -151,12 +303,19 @@ class MatchIntegrationTest {
                 .name("E3")
                 .build();
     }
-    Player player1() {
+
+    private static Team team1() {
+        return Team.builder()
+                .id(1)
+                .name("E1")
+                .build();
+    }
+    private static Player player1() {
         return Player.builder()
                 .id(1)
-                .name("J1")
+                .name("Joe")
                 .teamName("E1")
-                .guardian(false)
+                .guardian(true)
                 .build();
     }
 
@@ -164,6 +323,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(6)
                 .name("J6")
+                .teamName("E3")
                 .guardian(false)
                 .build();
     }
@@ -172,6 +332,23 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(3)
                 .name("J3")
+                .teamName("E2")
+                .guardian(false)
+                .build();
+    }
+    private static Player player4() {
+        return Player.builder()
+                .id(4)
+                .name("J4")
+                .teamName("E2")
+                .guardian(false)
+                .build();
+    }
+    private static Player player2() {
+        return Player.builder()
+                .id(2)
+                .name("J2")
+                .teamName("E2")
                 .guardian(false)
                 .build();
     }
@@ -181,5 +358,14 @@ class MatchIntegrationTest {
                 .id(2)
                 .name("E2")
                 .build();
+    }
+
+    private List<Match> convertFromHttpResponse(MockHttpServletResponse response)
+            throws JsonProcessingException, UnsupportedEncodingException {
+        CollectionType playerListType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, Match.class);
+        return objectMapper.readValue(
+                response.getContentAsString(),
+                playerListType);
     }
 }
