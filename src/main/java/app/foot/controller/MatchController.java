@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-public class MatchController {
+public class MatchController extends BaseController {
     private final MatchService service;
     private final GoalValidator validator;
     private final MatchRestMapper mapper;
@@ -23,12 +23,14 @@ public class MatchController {
     public Match getMatchById(@PathVariable Integer id) {
         return mapper.toRest(service.getMatchById(id));
     }
+
     @GetMapping("/matches")
     public List<Match> getMatches() {
         return service.getMatches().stream()
                 .map(mapper::toRest)
                 .toList();
     }
+
     //TODO: add integration test ok and ko of adding goals into match where id = 3
     @PostMapping("/matches/{matchId}/goals")
     public Match addGoals(@PathVariable int matchId, @RequestBody List<PlayerScorer> scorers) {
