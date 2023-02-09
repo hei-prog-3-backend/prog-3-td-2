@@ -1,11 +1,9 @@
 package unit;
 
-import app.foot.controller.exception.NotFoundException;
 import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
 import app.foot.repository.PlayerRepository;
-import app.foot.repository.TeamRepository;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;

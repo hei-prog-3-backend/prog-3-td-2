@@ -1,7 +1,7 @@
 package unit;
 
 import app.foot.controller.validator.GoalValidator;
-import app.foot.controller.exception.BadRequestException;
+import app.foot.exception.BadRequestException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -19,7 +19,7 @@ public class GoalValidatorTest {
     //Mandatory attributes not provided : scoreTime
     @Test
     void accept_ko() {
-        assertThrowsExceptionMessage("Score minute is mandatory.",
+        assertThrowsExceptionMessage("400 BAD_REQUEST : Score minute is mandatory.",
                 BadRequestException.class, () -> subject.accept(nullScoreTimeScorer()));
     }
 

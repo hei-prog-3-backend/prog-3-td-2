@@ -2,9 +2,8 @@ package integration;
 
 import app.foot.FootApi;
 import app.foot.controller.rest.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
+
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.List;
 
-import static integration.MatchIntegrationTest.teamMatchB;
+import static integration.MatchIntegrationTest.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,10 +40,9 @@ public class PlayerScorerIntegrationTest {
                 )
                 .andReturn()
                 .getResponse();
-
-        Match actual = objectMapper.readValue(
-                response.getContentAsString(), Match.class);
+        Match actual = objectMapper.readValue(response.getContentAsString(), Match.class);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(expectedMatch3(), actual);
     }
 
     @Test
@@ -80,7 +76,6 @@ public class PlayerScorerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andReturn()
                 .getResponse();
-
     }
 
     @Test
@@ -90,7 +85,7 @@ public class PlayerScorerIntegrationTest {
                 .scoreTime(0)
                 .build();
 
-        MockHttpServletResponse response = mockMvc.perform(post("/matches/3/goals")
+         mockMvc.perform(post("/matches/3/goals")
                         .content(objectMapper.writeValueAsString(List.of(badScorer1)))
                         .contentType("application/json")
                         .accept("application/json")
@@ -116,14 +111,21 @@ public class PlayerScorerIntegrationTest {
                 .andReturn()
                 .getResponse();
     }
-
-    public static Match match3(){
+    public static Match expectedMatch3() {
         return Match.builder()
                 .id(3)
-                .datetime(Instant.parse("2023-01-01T18:00:00Z"))
+                .teamA(TeamMatch.builder()
+                        .score(1)
+                        .scorers(List.of(scorer1()))
+                        .team(team1())
+                        .build())
+                .teamB(TeamMatch.builder()
+                        .score(0)
+                        .scorers(List.of())
+                        .team(team3())
+                        .build())
                 .stadium("S3")
-                .teamA(teamMatchA())
-                .teamB(teamMatchB())
+                .datetime(Instant.parse("2023-01-01T18:00:00Z"))
                 .build();
     }
 
@@ -156,17 +158,6 @@ public class PlayerScorerIntegrationTest {
                 .player(player1())
                 .isOG(false)
                 .build();
-    }
-
-
-
-    private List<PlayerScorer> convertFromHttpResponse(MockHttpServletResponse response)
-            throws JsonProcessingException, UnsupportedEncodingException {
-        CollectionType playerListType = objectMapper.getTypeFactory()
-                .constructCollectionType(List.class, PlayerScorer.class);
-        return objectMapper.readValue(
-                response.getContentAsString(),
-                playerListType);
     }
 
 }

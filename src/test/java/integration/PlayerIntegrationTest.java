@@ -43,7 +43,7 @@ class PlayerIntegrationTest {
     Player player2() {
         return Player.builder()
                 .id(2)
-                .name("Joe Doe")
+                .name("J2")
                 .isGuardian(false)
                 .teamName("E1")
                 .build();
@@ -76,7 +76,7 @@ class PlayerIntegrationTest {
     }
 
     @Test
-    void update_players_ok() throws Exception {
+    void    update_players_ok() throws Exception {
         Player toUpdate = Player.builder()
                 .id(2)
                 .name("Joe Doe")
